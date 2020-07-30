@@ -10,6 +10,7 @@ import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
+    @Override
     public List<Object> findAll() {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
