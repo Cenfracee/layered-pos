@@ -2,14 +2,14 @@ package dao;
 
 import java.util.List;
 
-public interface SuperDAO {
-    List<Object> findAll();
+public interface SuperDAO<T,ID> {
+    List<T> findAll();
 
-    Object find(Object key);
+    T find(ID key);
 
-    boolean save(Object entity);
+    boolean save(T entity);
 
-    boolean update(Object entity);
+    boolean update(T entity);
 
-    boolean delete(Object key);
+    boolean delete(ID key);
 }
