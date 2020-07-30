@@ -9,7 +9,7 @@ public interface SuperDAO {
 
     boolean save(Object entity);
 
-    boolean update(Object customer);
+    boolean update(Object entity);
 
     boolean delete(Object key);
 }
