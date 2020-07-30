@@ -1,10 +1,10 @@
 package business;
 
-import dao.CustomerDAO;
-import dao.impl.CustomerDAOImpl;
-import dao.impl.ItemDAOImpl;
-import dao.impl.OrderDAOImpl;
-import dao.impl.OrderDetailDAOImpl;
+import dao.custom.CustomerDAO;
+import dao.custom.impl.CustomerDAOImpl;
+import dao.custom.impl.ItemDAOImpl;
+import dao.custom.impl.OrderDAOImpl;
+import dao.custom.impl.OrderDetailDAOImpl;
 import db.DBConnection;
 import entity.Customer;
 import entity.Item;
