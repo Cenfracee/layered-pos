@@ -8,10 +8,7 @@ import java.util.List;
 class CrudUtilTest {
 
     public static void main(String[] args) throws SQLException {
-        List<String> params = new ArrayList<>();
-        params.add("C001");
-        params.add("Kasun");
-        ResultSet rst = CrudUtil.executeQuery("SELECT * FROM Customer WHERE id=? AND name=?",params);
+        ResultSet rst = CrudUtil.executeQuery("SELECT * FROM Customer WHERE id=?","C001");
         System.out.println(rst.next());
     }
 

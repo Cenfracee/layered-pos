@@ -10,16 +10,24 @@ import java.util.List;
 
 public class CrudUtil {
 
-    public static boolean executeUpdate(String sql){
-        return false;
+    public static boolean executeUpdate(String sql, Object... params) throws SQLException{
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        int i = 0;
+        for (Object param : params) {
+            i++;
+            pstm.setObject(i, param);
+        }
+        return pstm.executeUpdate() > 0;
     }
 
-    public static ResultSet executeQuery(String sql, List<String> params) throws SQLException {
+    public static ResultSet executeQuery(String sql, Object... params) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         //SELECT * FROM Customer WHERE id=? AND name=?
         PreparedStatement pstm = connection.prepareStatement(sql);
+//        System.out.println(params[0]);
         int i = 0;
-        for (String param : params) {
+        for (Object param : params) {
             i++;
             pstm.setObject(i, param);
         }
