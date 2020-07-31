@@ -55,9 +55,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean update(Order order) throws Exception {
-
         return CrudUtil.execute("UPDATE Order SET date=?, customerId=? WHERE id=?", order.getDate(), order.getCustomerId(), order.getId());
-
     }
 
     @Override

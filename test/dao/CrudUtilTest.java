@@ -12,8 +12,7 @@ class CrudUtilTest {
 //        ResultSet rst = CrudUtil.<ResultSet>execute("SELECT * FROM Customer WHERE id=?","C001");
 //        System.out.println(rst.next());
 //        System.out.println(rst.getString(1));
-        ResultSet rst = CrudUtil.execute("SELECT * FROM Customer WHERE id=?", "C001");
-        System.out.println(rst.next());
+
     }
 
 }
