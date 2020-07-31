@@ -1,5 +1,6 @@
 package business.custom.impl;
 
+import business.Temp;
 import business.custom.OrderBO;
 import dao.DAOFactory;
 import dao.DAOType;
@@ -20,9 +21,25 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
-public class OrderBOImpl implements OrderBO {
+public class OrderBOImpl implements OrderBO { // , Temp
+
+    private OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);;
+    private OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER_DETAIL);
+    private ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
+
+    // Interface through injection
+/*    @Override
+    public void injection() {
+        this.orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
+    }  */
+
+    // Setter method injection
+/*    private void setOrderDAO(){
+        this.orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
+    }*/
+
     public String getNewOrderId() throws Exception {
-        OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
+
         String lastOrderId = orderDAO.getLastOrderId();
 
         if (lastOrderId == null) {
@@ -44,9 +61,6 @@ public class OrderBOImpl implements OrderBO {
 
     public boolean placeOrder(OrderTM order, List<OrderDetailTM> orderDetails) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
-        OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
-        OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER_DETAIL);
-        ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
         try {
             connection.setAutoCommit(false);
             boolean result = orderDAO.save(new Order(order.getOrderId(),

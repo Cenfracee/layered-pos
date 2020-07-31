@@ -1,5 +1,10 @@
 package controller;
 
+import business.BOFactory;
+import business.BOType;
+import business.custom.CustomerBO;
+import business.custom.ItemBO;
+import business.custom.OrderBO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -46,6 +51,10 @@ public class PlaceOrderFormController {
     public JFXButton btnAddNewOrder;
     public TableView<OrderDetailTM> tblOrderDetails;
     private boolean readOnly;
+
+    private OrderBO orderBO = BOFactory.getInstance().getBO(BOType.ORDER);
+    private ItemBO itemBO = BOFactory.getInstance().getBO(BOType.ITEM);
+    private CustomerBO customerBO = BOFactory.getInstance().getBO(BOType.CUSTOMER);
 
     public void initialize() {
 
@@ -146,12 +155,20 @@ public class PlaceOrderFormController {
 
     private void loadAllItems() {
         cmbItemCode.getItems().clear();
-        cmbItemCode.setItems(FXCollections.observableArrayList(BusinessLogic.getAllItems()));
+        try {
+            cmbItemCode.setItems(FXCollections.observableArrayList(itemBO.getAllItems()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadAllCustomers() {
         cmbCustomerId.getItems().clear();
-        cmbCustomerId.setItems(FXCollections.observableArrayList(BusinessLogic.getAllCustomers()));
+        try {
+            cmbCustomerId.setItems(FXCollections.observableArrayList(customerBO.getAllCustomers()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void calculateQtyOnHand(ItemTM item) {
@@ -251,7 +268,12 @@ public class PlaceOrderFormController {
             return;
         }
 
-        boolean result = BusinessLogic.placeOrder(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        boolean result = false;
+        try {
+            result = orderBO.placeOrder(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!result){
             new Alert(Alert.AlertType.ERROR, "Mudalali wade awul wage", ButtonType.OK).show();
             return;
@@ -296,7 +318,11 @@ public class PlaceOrderFormController {
 
     private void generateOrderId() {
         // Generate a new id
-        lblId.setText(BusinessLogic.getNewOrderId());
+        try {
+            lblId.setText(orderBO.getNewOrderId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void initializeWithSearchOrderForm(String orderId) {

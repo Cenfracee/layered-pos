@@ -5,6 +5,9 @@
  */
 package controller;
 
+import business.BOFactory;
+import business.BOType;
+import business.custom.CustomerBO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -51,6 +54,8 @@ public class ManageCustomerFormController implements Initializable {
     @FXML
     private TableView<CustomerTM> tblCustomers;
 
+    private CustomerBO customerBO = BOFactory.getInstance().getBO(BOType.CUSTOMER);
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -93,7 +98,12 @@ public class ManageCustomerFormController implements Initializable {
 
     private void loadAllCustomers() {
         tblCustomers.getItems().clear();
-        List<CustomerTM> allCustomers = BusinessLogic.getAllCustomers();
+        List<CustomerTM> allCustomers = null;
+        try {
+            allCustomers = customerBO.getAllCustomers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ObservableList<CustomerTM> customers = FXCollections.observableArrayList(allCustomers);
         tblCustomers.setItems(customers);
     }
@@ -121,13 +131,22 @@ public class ManageCustomerFormController implements Initializable {
 
         if (btnSave.getText().equals("Save")) {
 
-            BusinessLogic.saveCustomer(txtCustomerId.getText(),
-                    txtCustomerName.getText(),
-                    txtCustomerAddress.getText());
+            try {
+                customerBO.saveCustomer(txtCustomerId.getText(),
+                        txtCustomerName.getText(),
+                        txtCustomerAddress.getText());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             btnAddNew_OnAction(event);
         } else {
             CustomerTM selectedItem = tblCustomers.getSelectionModel().getSelectedItem();
-            boolean result = BusinessLogic.updateCustomer(txtCustomerName.getText(), txtCustomerAddress.getText(), selectedItem.getId());
+            boolean result = false;
+            try {
+                result = customerBO.updateCustomer(txtCustomerName.getText(), txtCustomerAddress.getText(), selectedItem.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (!result) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer", ButtonType.OK).show();
             }
@@ -146,7 +165,12 @@ public class ManageCustomerFormController implements Initializable {
         if (buttonType.get() == ButtonType.YES) {
             CustomerTM selectedItem = tblCustomers.getSelectionModel().getSelectedItem();
 
-            boolean result = BusinessLogic.deleteCustomer(selectedItem.getId());
+            boolean result = false;
+            try {
+                result = customerBO.deleteCustomer(selectedItem.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (!result){
                 new Alert(Alert.AlertType.ERROR, "Failed to delete the customer", ButtonType.OK).show();
             }else{
@@ -168,7 +192,11 @@ public class ManageCustomerFormController implements Initializable {
         btnSave.setDisable(false);
 
         // Generate a new id
-        txtCustomerId.setText(BusinessLogic.getNewCustomerId());
+        try {
+            txtCustomerId.setText(customerBO.getNewCustomerId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
