@@ -1,5 +1,6 @@
 package dao.custom.impl;
 
+import dao.CrudUtil;
 import dao.custom.QueryDAO;
 import db.DBConnection;
 import entity.CustomEntity;
@@ -17,12 +18,9 @@ public class QueryDAOImpl implements QueryDAO {
     @Override
     public CustomEntity getOrderDetail(String orderId) {
         try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("SELECT  o.id, c.name, o.date FROM `Order` o\n" +
+            ResultSet rst = CrudUtil.execute("SELECT  o.id, c.name, o.date FROM `Order` o\n" +
                     "INNER JOIN Customer c on o.customerId = c.id\n" +
-                    "WHERE o.id=?");
-            pstm.setObject(1,orderId);
-            ResultSet rst = pstm.executeQuery();
+                    "WHERE o.id=?", orderId);
             if (rst.next()){
                 return new CustomEntity(rst.getString(1),
                         rst.getString(2),
@@ -38,13 +36,10 @@ public class QueryDAOImpl implements QueryDAO {
     @Override
     public CustomEntity getOrderDetail2(String orderId) {
         try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.
-                    prepareStatement("SELECT  c.id, c.name, o.id FROM `Order` o\n" +
+            ResultSet rst = CrudUtil.execute("SELECT" +
+                    "  c.id, c.name, o.id FROM `Order` o\n" +
                     "INNER JOIN Customer c on o.customerId = c.id\n" +
-                    "WHERE o.id=?");
-            pstm.setObject(1,orderId);
-            ResultSet rst = pstm.executeQuery();
+                    "WHERE o.id=?", orderId);
             if (rst.next()){
                 return new CustomEntity(rst.getString(1),
                         rst.getString(2),
