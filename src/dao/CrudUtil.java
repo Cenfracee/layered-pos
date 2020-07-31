@@ -1,7 +1,10 @@
 package dao;
 
 import db.DBConnection;
+import entity.Customer;
+import entity.Item;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +13,21 @@ import java.util.List;
 
 public class CrudUtil {
 
-    public static boolean executeUpdate(String sql, Object... params) throws SQLException{
+    public static <T> T execute(String sql, Object... params) throws SQLException{
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        int i = 0;
+        for (Object param : params) {
+            i++;
+            pstm.setObject(i, param);
+        }
+        if (sql.startsWith("SELECT")){
+            return (T) pstm.executeQuery();     // ResultSet
+        }
+        return (T) ((Boolean) (pstm.executeUpdate() > 0));    // boolean
+    }
+
+   /* public static boolean executeUpdate(String sql, Object... params) throws SQLException{
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement(sql);
         int i = 0;
@@ -32,6 +49,6 @@ public class CrudUtil {
             pstm.setObject(i, param);
         }
         return pstm.executeQuery();
-    }
+    }*/
 
 }
